@@ -1,5 +1,9 @@
 #[macro_use]
 extern crate rocket;
+
+pub mod utills;
+use crate::utills::vid_convert::vid_convert;
+
 use rocket::form::Form;
 use rocket::fs::{relative, FileServer};
 
@@ -9,9 +13,14 @@ struct Num {
     num2: u32,
 }
 
+#[derive(Responder)]
+#[response(status = 200, content_type = "json")]
+struct Value(String);
+
 #[post("/", format = "multipart/form-data", data = "<nums>")]
-fn add_num(nums: Form<Num>) {
-    println!("{}", nums.num1 + nums.num2);
+fn add_num(nums: Form<Num>) -> Value {
+    let value: u32 = vid_convert(nums.num1, nums.num2);
+    Value(format!("value: {}", value))
 }
 
 // #[get("/<name>")]
