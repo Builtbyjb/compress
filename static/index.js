@@ -17,7 +17,7 @@ document.querySelectorAll(".sectionButton").forEach((button) => {
 });
 
 // Video Conversion
-document.querySelector("#vidCconvertForm").onsubmit = () => {
+document.querySelector("#vidConvertForm").onsubmit = () => {
     document.querySelector("#vidConvertMsgLog").innerHTML = "Submitted successfully";
     const formData = new formData();
     const fileField = document.querySelector("#vidConvertFile");
@@ -27,7 +27,7 @@ document.querySelector("#vidCconvertForm").onsubmit = () => {
 
 
 // Sends data to the server
-async function upload(formData, path, elementID) {
+async function upload(formData, path, msgLogID) {
     try {
         const response = await fetch(`https://127.0.0.1:8000/${path}`, {
             method: "POST",
