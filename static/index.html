@@ -10,7 +10,7 @@
 
 <body>
     <!-- TopBar -->
-    <div id="top_bar">
+    <div id="topBar">
         <h1 class="text-3xl font-bold">
             OFF Tooling
         </h1>
@@ -18,37 +18,37 @@
     </div>
 
     <!-- Main-->
-    <div id="main_div" style="display: flex; margin: 20px;">
+    <div id="mainDiv" style="display: flex; margin: 20px;">
 
         <!-- NavBar -->
-        <div id="nav_bar" style="margin-right: 50px;">
+        <div id="navBar" style="margin-right: 50px;">
             <ul>
-                <button data-section="default_div" class="section_button">
+                <button data-section="defaultDiv" class="sectionButton">
                     Tools
                 </button>
 
                 <li>
-                    <button data-section="vid_convert" class="section_button">
+                    <button data-section="vidConvert" class="sectionButton">
                         Video Conversion
                     </button>
                 </li>
                 <li>
-                    <button data-section="vid_compress" class="section_button">
+                    <button data-section="vidCompress" class="sectionButton">
                         Video Compression
                     </button>
                 </li>
                 <li>
-                    <button data-section="pdf_docx" class="section_button">
+                    <button data-section="pdfDocx" class="sectionButton">
                         Convert Between PDF and Doc
                     </button>
                 </li>
                 <li>
-                    <button data-section="improve_img" class="section_button">
+                    <button data-section="improveImg" class="sectionButton">
                         Improve Image Quality
                     </button>
                 </li>
                 <li>
-                    <button data-section="img_compress" class="section_button">
+                    <button data-section="imgCompress" class="sectionButton">
                         Image Compression
                     </button>
                 </li>
@@ -56,46 +56,47 @@
         </div>
 
         <!-- Content-->
-        <div id="content_div">
+        <div id="contentDiv">
 
             <!-- Tools (Default Div) -->
-            <div id="default_div">
+            <div id="defaultDiv">
                 <h1>OFF Tooling</h1>
                 <p>We solve all your file related needs</p>
             </div>
 
-            <!-- Video Conversion -->
-            <div id="vid_convert" class="section_display">
+            <!-- Video Conversion Section-->
+            <div id="vidConvert" class="sectionDisplay">
                 <h1>Video Conversion</h1>
-                <form id="vid_convert_form" method="POST">
-                    <input type="file" id="vid_convert_file" placeholder="filename">
-                    <input type="submit" id="vid_convert_submit" value="submit">
+                <p id="vidConvertMsgLog"></p>
+                <form id="vidConvertForm" method="POST">
+                    <input type="file" id="vidConvertFile" placeholder="filename">
+                    <input type="submit" id="vidConvertSubmit" value="submit">
                 </form>
             </div>
 
-            <!-- Video Compression -->
-            <div id="vid_compress" class="section_display">
+            <!-- Video Compression Section-->
+            <div id="vidCompress" class="sectionDisplay">
                 <h1>Video Compression</h1>
                 <p>Coming Soon...</p>
                 <!-- TODO -->
             </div>
 
-            <!-- PDF to Docx -->
-            <div id="pdf_docx" class="section_display">
+            <!-- PDF to Docx Section-->
+            <div id="pdfDocx" class="sectionDisplay">
                 <h1>PDF to Docx</h1>
                 <p>Coming Soon...</p>
                 <!-- TODO -->
             </div>
 
-            <!-- Improve Image Quality -->
-            <div id="improve_img" class="section_display">
+            <!-- Improve Image Quality Section-->
+            <div id="improveImg" class="sectionDisplay">
                 <h1>Improve Image Quality</h1>
                 <p>Coming Soon...</p>
                 <!-- TODO -->
             </div>
 
-            <!-- Image compression -->
-            <div id="img_compress" class="section_display">
+            <!-- Image compression Section-->
+            <div id="imgCompress" class="sectionDisplay">
                 <h1>Image Compression</h1>
                 <p>Coming Soon...</p>
                 <!-- TODO -->

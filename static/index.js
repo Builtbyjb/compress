@@ -1,7 +1,7 @@
-// Controls which div is being displayed
-function display_section(section) {
-    document.getElementById("default_div").style.display = 'none';
-    document.querySelectorAll(".section_display").forEach((section) => {
+// Controls which section is being displayed
+function displaySection(section) {
+    document.querySelector("#defaultDiv").style.display = 'none';
+    document.querySelectorAll(".sectionDisplay").forEach((section) => {
         section.style.display = "none";
     });
     document.querySelector(`#${section}`).style.display = "block";
@@ -10,14 +10,32 @@ function display_section(section) {
 /* for each button with the "section_button" class,
 *  it calls the display_section function
 */
-document.querySelectorAll(".section_button").forEach((button) => {
+document.querySelectorAll(".sectionButton").forEach((button) => {
     button.onclick = () => {
-        display_section(button.dataset.section);
+        displaySection(button.dataset.section);
     }
 });
 
 // Video Conversion
-document.querySelector("#vid_convert_form").onsubmit = () => {
-    console.log("submiting form");
+document.querySelector("#vidCconvertForm").onsubmit = () => {
+    document.querySelector("#vidConvertMsgLog").innerHTML = "Submitted successfully";
+    const formData = new formData();
+    const fileField = document.querySelector("#vidConvertFile");
+    console.log(fileField);
     return false;
+}
+
+
+// Sends data to the server
+async function upload(formData, path, elementID) {
+    try {
+        const response = await fetch(`https://127.0.0.1:8000/${path}`, {
+            method: "POST",
+            body: formData,
+        })
+        console.log(response);
+    } catch (error) {
+        console.log("Upload error: ", error);
+    }
+
 }
