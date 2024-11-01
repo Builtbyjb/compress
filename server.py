@@ -8,37 +8,43 @@ import uvicorn
 HOST = "127.0.0.1"
 PORT = 8000
 
+
 app = FastAPI()
-templates  = Jinja2Templates(directory="templates")
+templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
+
+auth = True
+
 
 @app.get("/")
 async def index(request: Request):
-    return templates.TemplateResponse(
-        request=request,
-        name= "index.html",
-        context={"name": "Ajibola"}
-    )
+    if auth:
+        return templates.TemplateResponse(
+            request=request,
+            name="index.html",
+            context={}
+        )
+    else:
+        return templates.TemplateResponse(
+            request=request,
+            name="login.html",
+            context={}
+        )
 
-@app.get("/compress_image")
+
+@app.get("/compress")
 async def index(request: Request):
     return templates.TemplateResponse(
         request=request,
-        name= "compress_image.html",
+        name="compress.html",
     )
 
-@app.get("/compress_video")
-async def index(request: Request):
-    return templates.TemplateResponse(
-        request=request,
-        name= "compress_video.html",
-    )
 
 if __name__ == "__main__":
     uvicorn.run(
-        "server:app", 
-        host=HOST, 
-        port=PORT, 
+        "server:app",
+        host=HOST,
+        port=PORT,
         reload=True,
         log_level="info"
     )
