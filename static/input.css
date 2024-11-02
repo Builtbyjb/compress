@@ -1,3 +1,10 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+.border-blue-500 {
+  border-color: url(#spinner-gradient);
+}
+.border-red-500 {
+  border-color: #ef4444;
+}

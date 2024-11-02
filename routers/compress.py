@@ -1,5 +1,6 @@
 from fastapi import APIRouter, Request
 from fastapi.templating import Jinja2Templates
+import time
 
 router = APIRouter(
     prefix="/compress",
@@ -20,4 +21,5 @@ async def get_compress_page(request: Request):
 
 @router.post("/")
 async def compress_file():
+    time.sleep(3)
     return "success"
