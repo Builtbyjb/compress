@@ -9,6 +9,11 @@ document.addEventListener('DOMContentLoaded', function () {
 const fileInput = document.getElementById('file-input');
 const fileList = document.getElementById('file-list');
 
+// const btn = document.createElement("button");
+// btn.setAttribute("id", "compress-btn");
+// btn.className = "text-gray-300 bg-blue-700 hover:bg-white hover:bg-opacity-10 hover:text-white px-3 py-2 rounded-md text-sm font-medium";
+// btn.textContent = "Compress";
+
 fileInput.addEventListener('change', handleFiles);
 
 function handleFiles() {
@@ -16,9 +21,10 @@ function handleFiles() {
     for (let i = 0; i < files.length; i++) {
         uploadFile(files[i]);
     }
+
 }
 
-function uploadFile(file) {
+async function uploadFile(file) {
     const fileItem = document.createElement('div');
     fileItem.className = 'bg-gray-800 p-4 rounded-lg shadow';
     fileItem.innerHTML = `
@@ -36,35 +42,46 @@ function uploadFile(file) {
     const progressBar = fileItem.querySelector('.progress-bar');
     const progressText = fileItem.querySelector('.progress-text');
 
+    const formData = new FormData();
+    formData.append(`${file.name}`, file);
+
+    // console.log(file);
+    // const data = await fetch("/compress", {
+    //     method: "POST",
+    //     headers: {
+    //         "Content-Type": "multipart/form-data"
+    //     },
+    //     body: formData
+    // })
+
+    // const response = await data;
+    // console.log(response)
+
+
     // Simulating file upload with setTimeout
     let progress = 0;
     const simulateUpload = setInterval(() => {
         if (progress >= 100) {
             clearInterval(simulateUpload);
-            fileItem.innerHTML += '<div class="mt-2 text-sm text-green-400 font-semibold">Upload complete!</div>';
+            fileItem.innerHTML += `
+            <div class="mt-2 text-sm text-green-400 font-semibold">
+                Upload complete!
+            </div>
+            `;
+            // fileList.appendChild(btn)
         } else {
             progress += 5;
             progressBar.style.width = progress + '%';
             progressText.textContent = progress + '%';
         }
     }, 200);
-
-    // In a real application, you would use XMLHttpRequest or Fetch API here
-    // const xhr = new XMLHttpRequest();
-    // xhr.open('POST', 'your-upload-url');
-    // xhr.upload.addEventListener('progress', (e) => {
-    //     if (e.lengthComputable) {
-    //         const percentComplete = (e.loaded / e.total) * 100;
-    //         progressBar.style.width = percentComplete + '%';
-    //         progressText.textContent = Math.round(percentComplete) + '%';
-    //     }
-    // });
-    // xhr.addEventListener('load', () => {
-    //     if (xhr.status === 200) {
-    //         fileItem.innerHTML += '<div class="mt-2 text-sm text-green-400 font-semibold">Upload complete!</div>';
-    //     } else {
-    //         fileItem.innerHTML += '<div class="mt-2 text-sm text-red-400 font-semibold">Upload failed!</div>';
-    //     }
-    // });
-    // xhr.send(file);
 }
+
+// Download compress files
+document.addEventListener("click", (event) => {
+    const element = event.target;
+
+    if (element.id === "compress-btn") {
+        console.log(fileInput);
+    }
+})
