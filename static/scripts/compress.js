@@ -52,7 +52,7 @@ async function uploadFile(file) {
     // console.log(file);
 
     const response = await sendFile(formData)
-    if (response.message !== undefined) {
+    if (response.message != undefined) {
         fileItem.removeChild(compressElement)
 
         fileItem.innerHTML += `
@@ -64,7 +64,7 @@ async function uploadFile(file) {
         <p class="mt-1 mb-2 text-sm text-green-400 font-semibold">Complete!!!</p>
         `;
 
-        const btn = generateBtn()
+        const btn = generateBtn(response.fileId, "test_img.jpg")
         fileItem.appendChild(btn)
     } else {
         fileItem.removeChild(compressElement)
@@ -74,17 +74,14 @@ async function uploadFile(file) {
         `;
 
         fileItem.innerHTML += `
-        <p class="mt-2 me-2 text-sm text-blue-400 font-semibold"
-        >Please try uploading the file again</p>
+        <p class="mt-2 me-2 text-sm text-red-400 font-semibold">${response.detail}</p>
         `;
 
-        // Failure error message
-        // fileItem.innerHTML += `
-        // <p class="mt-2 me-2 text-sm text-blue-400 font-semibold"
-        // >Internal Server error, we are working on the issue, if you have an account with us we will notify when we are back online</p>
-        // `;
+        fileItem.innerHTML += `
+        <p class="mt-2 me-2 text-sm text-blue-400 font-semibold"
+        >Please try again</p>
+        `;
 
-        // Todo: See if i can set the value of only one file
         fileInput.value = "";
     }
 }
@@ -98,7 +95,7 @@ async function sendFile(formData) {
 
         })
         const response = await file.json()
-        console.log(response.message)
+        console.log(response)
         return response
 
     } catch (error) {
@@ -114,9 +111,11 @@ function generateCompressElement() {
     return p
 }
 
-function generateBtn() {
+function generateBtn(fileId, fileName) {
     const btn = document.createElement("button");
     btn.setAttribute("id", "compress-btn");
+    btn.setAttribute("data-fileid", `${fileId}`);
+    btn.setAttribute("data-filename", `${fileName}`);
     btn.className = "text-gray-300 bg-blue-700 hover:bg-white hover:bg-opacity-10 hover:text-white px-3 py-2 rounded-md text-sm font-medium";
     btn.textContent = "Download";
 
@@ -128,6 +127,12 @@ document.addEventListener("click", (event) => {
     const element = event.target;
 
     if (element.id === "compress-btn") {
-        console.log("Downloading");
+        const a = document.createElement("a");
+        a.setAttribute("download", `${element.dataset.filename}`);
+        a.setAttribute("href", `/uploads/${element.dataset.fileid}`);
+        a.style.display = "none";
+        document.body.append(a)
+        a.click()
+        a.remove()
     }
 })

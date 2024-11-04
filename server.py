@@ -1,7 +1,7 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
-from routers import compress
+from routers import compress_routes
 import uvicorn
 
 
@@ -10,11 +10,12 @@ PORT = 8000
 
 
 app = FastAPI()
-app.include_router(compress.router)
+app.include_router(compress_routes.router)
 
 
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
+app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
 
 auth = True
 
