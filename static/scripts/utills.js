@@ -16,3 +16,19 @@ export function calcFileSize(fileSize) {
 
     return `${newSize}MB`
 }
+
+const ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4"]
+
+// Validate file extention
+export function isValidExt(fileName) {
+    let isValid = false;
+    const str = fileName.split(".");
+    const idx = str.length - 1;
+    ALLOWED_EXT.map(i => {
+        if (i === str[idx].toLowerCase()) {
+            isValid = true;
+        }
+    })
+
+    return isValid
+}

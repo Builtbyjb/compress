@@ -8,7 +8,11 @@
         <h1 class="text-3xl font-bold text-gray-100 mb-6">
             Compress an image or a video file
         </h1>
-        <input type="file" id="file-input" accept="image/*,video/*" multiple class="hidden">
+        <p class="mt-1 mb-1 text-sm text-gray-300">Max file size: 1GB</p>
+        <p class="mt-1 mb-2 text-sm text-gray-300">Allowed file extentions: ".jpg", ".jpeg", ".png",
+            ".mov", ".mkv", ".mp4"</p>
+        <input type="file" id="file-input"
+            accept="image/jpeg,image/jpg,image/png,video/quicktime,video/mp4,video/x-matroska" multiple class="hidden">
         <label for="file-input"
             class="block w-full text-center bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-4 rounded-lg cursor-pointer transition duration-300 shadow-md">
             Choose Images or Videos

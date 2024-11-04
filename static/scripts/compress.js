@@ -1,4 +1,4 @@
-import { handleNavBar, calcFileSize } from "./utills.js";
+import { handleNavBar, calcFileSize, isValidExt } from "./utills.js";
 
 handleNavBar();
 
@@ -9,12 +9,26 @@ fileInput.addEventListener('change', handleFiles);
 
 function handleFiles() {
     const files = this.files;
-    for (let i = 0; i < files.length; i++) {
-        uploadFile(files[i]);
+    // console.log(files)
+
+    if (files.length > 0) {
+        for (let i = 0; i < files.length; i++) {
+            uploadFile(files[i]);
+        }
+    } else {
+        console.log("At least one file most be submitted");
     }
 }
 
 async function uploadFile(file) {
+
+    // Validate file extentions
+    const isValid = isValidExt(file.name)
+    if (!isValid) {
+        console.log(`The file with the name ${file.name} has an invalid extention`)
+        return
+    }
+
     const fileSize = calcFileSize(file.size)
 
     const fileItem = document.createElement('div');
@@ -33,12 +47,12 @@ async function uploadFile(file) {
     fileList.appendChild(fileItem);
 
     const formData = new FormData();
-    formData.append(`${file.name}`, file);
+    formData.append("file", file);
 
     // console.log(file);
 
     const response = await sendFile(formData)
-    if (response) {
+    if (response.message !== undefined) {
         fileItem.removeChild(compressElement)
 
         fileItem.innerHTML += `
@@ -67,9 +81,10 @@ async function uploadFile(file) {
         // Failure error message
         // fileItem.innerHTML += `
         // <p class="mt-2 me-2 text-sm text-blue-400 font-semibold"
-        // >Please try the uploading the file again</p>
+        // >Internal Server error, we are working on the issue, if you have an account with us we will notify when we are back online</p>
         // `;
 
+        // Todo: See if i can set the value of only one file
         fileInput.value = "";
     }
 }
@@ -79,20 +94,15 @@ async function sendFile(formData) {
     try {
         const file = await fetch('/compress', {
             method: "POST",
-            headers: {
-                "Content-Type": "multipart/form-data"
-            },
             body: formData
 
         })
         const response = await file.json()
-        // console.log(response)
-        // return true
-        return false
+        console.log(response.message)
+        return response
 
     } catch (error) {
         console.error(error)
-        return false
     }
 }
 
