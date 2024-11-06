@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, UploadFile, status, HTTPException
 from fastapi.templating import Jinja2Templates
-from utills import ValidateExtention, ValidateType
+from utills import ValidateExtention, ValidateType, saveFile, bytesToArea
 from libs.compress import CompressImage, CompressVideo
 
 
@@ -28,16 +28,19 @@ async def compress_file(file: UploadFile):
     if is_valid_type and is_valid_ext:
 
         if content_type == "image":
-            file_id = CompressImage(file)
-            print(file_id)
-            file_idx = "test_img.jpg"
-            return {"message": "Image upload successful", "fileId": file_idx}
+            file_name = await saveFile(file)
+            file_size = bytesToArea(file.size)
+
+            new_file_name, new_file_size = CompressImage(file_name, file_size)
+
+            return {
+                "message": "Image upload successful",
+                "fileName": new_file_name,
+                "fileSize": new_file_size,
+            }
 
         elif content_type == "video":
-            file_id = CompressVideo(file)
-            print(file_id)
-            file_idx = "test_img.jpg"
-            return {"message": "Video upload successful", "fileId": file_idx}
+            pass
 
         else:
             raise HTTPException(
