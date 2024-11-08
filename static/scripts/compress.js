@@ -9,7 +9,6 @@ fileInput.addEventListener('change', handleFiles);
 
 function handleFiles() {
     const files = this.files;
-    // console.log(files)
 
     if (files.length > 0) {
         for (let i = 0; i < files.length; i++) {

@@ -17,7 +17,7 @@ export function calcFileSize(fileSize) {
     return `${newSize}MB`
 }
 
-const ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4"]
+const ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4", "heic"]
 
 // Validate file extention
 export function isValidExt(fileName) {

@@ -1,11 +1,13 @@
 import uuid
 import os
 from fastapi import UploadFile
+import math
+import re
 
 BASE_DIR = os.getcwd()
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 
-ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4"]
+ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4", "heic"]
 
 
 # Valid file extention
@@ -18,12 +20,15 @@ def ValidateExtention(file_name: str) -> tuple:
         return (False, "")
 
 
-ALLOWED_TYPE = ["image", "video"]
+ALLOWED_TYPE = ["image", "video", "application"]
 
 
 # Confirm content type
 def ValidateType(content_type: str) -> tuple:
-    type_s = content_type[0:5].lower()
+    type_re = re.compile(r'(^[a-z]+)/')
+    type_match = type_re.search(content_type)
+    type_s = type_match.group(1)
+
     if type_s in ALLOWED_TYPE:
         return (True, type_s)
     else:
@@ -43,9 +48,17 @@ async def saveFile(file: UploadFile) -> str:
     return file.filename
 
 
-# Convert image size from bytes to height and width
-def bytesToArea(file_size: int) -> tuple:
-    quality = 50 / 100
+# Reduce file height and width
+def compressSize(file_size: tuple, quality: int) -> tuple:
+    compress_percentage = quality / 100
 
-    # (Height, Width)
-    return (3008, 2008)
+    width = math.floor(file_size[0] * compress_percentage)
+    height = math.floor(file_size[1] * compress_percentage)
+
+    # (Width, Height)
+    return (width, height)
+
+
+# Converts the file area to bytes
+def areaToBytes(area: tuple) -> int:
+    pass

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, UploadFile, status, HTTPException
 from fastapi.templating import Jinja2Templates
-from utills import ValidateExtention, ValidateType, saveFile, bytesToArea
+from utills import ValidateExtention, ValidateType, saveFile
 from libs.compress import CompressImage, CompressVideo
 
 
@@ -29,12 +29,10 @@ async def compress_file(file: UploadFile):
 
         if content_type == "image":
             file_name = await saveFile(file)
-            file_size = bytesToArea(file.size)
-
-            new_file_name, new_file_size = CompressImage(file_name, file_size)
+            message, new_file_name, new_file_size = CompressImage(file_name)
 
             return {
-                "message": "Image upload successful",
+                "message": message,
                 "fileName": new_file_name,
                 "fileSize": new_file_size,
             }
