@@ -34,8 +34,6 @@ async function uploadFile(file) {
     fileItem.className = 'bg-gray-800 p-4 rounded-lg shadow';
     fileItem.innerHTML = `
         <p class="text-sm font-medium text-gray-300">${file.name}</p>
-        <p class="mt-1 text-sm font-medium text-gray-300"
-        >File type: ${file.type}</p>
         <p class="mt-1 mb-1 text-sm font-medium text-gray-300"
         >Original size: ${fileSize}</p>
     `;
@@ -59,7 +57,7 @@ async function uploadFile(file) {
 
         fileItem.innerHTML += `
         <p class="mt-1 me-2 text-sm text-gray-300 font-semibold"
-        >Compression size: ${newFileSize}</p>
+        >Compressed size: ${newFileSize}</p>
         `;
 
         fileItem.innerHTML += `
@@ -97,7 +95,7 @@ async function sendFile(formData) {
 
         })
         const r = await file.json()
-        console.log(r)
+        // console.log(r)
         return r
 
     } catch (error) {

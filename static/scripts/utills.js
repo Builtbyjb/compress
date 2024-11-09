@@ -11,11 +11,26 @@ export function handleNavBar() {
 
 // Converts bytes to megabytes
 export function calcFileSize(fileSize) {
-    // TODO: make it more robust for KB and GB
-    const bytes = 1_048_576
-    const newSize = (fileSize / bytes).toFixed(2)
+    const bytes = 1024
 
-    return `${newSize}MB`
+    // Calculate Kilo bytes
+    let newSize = fileSize / bytes
+
+    if (newSize > 1024) {
+        // Calulate Mega bytes
+        newSize = newSize / bytes
+
+        if (newSize > 1024) {
+            // Calulate Giga bytes
+            newSize = newSize / bytes
+
+            return `${newSize.toFixed(2)}GB`
+        } else {
+            return `${newSize.toFixed(2)}MB`
+        }
+    } else {
+        return `${newSize.toFixed(0)}KB`
+    }
 }
 
 const ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4", "heic"]
