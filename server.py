@@ -3,10 +3,13 @@ from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from routers import compress_routes
 import uvicorn
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
-HOST = "127.0.0.1"
-PORT = 8000
+HOST = os.getenv("HOST")
+PORT = int(os.getenv("PORT"))
 
 
 app = FastAPI()
