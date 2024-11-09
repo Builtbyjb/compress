@@ -129,7 +129,7 @@ document.addEventListener("click", (event) => {
     if (element.id === "compress-btn") {
         const a = document.createElement("a");
         a.setAttribute("download", `${element.dataset.filename}`);
-        a.setAttribute("href", `/compressed/${element.dataset.filedownloadname}`);
+        a.setAttribute("href", `/downloads/${element.dataset.filedownloadname}`);
         a.style.display = "none";
         document.body.append(a)
         a.click()

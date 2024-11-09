@@ -14,7 +14,7 @@ UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 
 def CompressImage(file_name) -> tuple[str, str, int]:
     filename = f"{UPLOAD_DIR}/{file_name}"
-    OUTPUT_DIR = os.path.join(BASE_DIR, f"compressed/{file_name}")
+    OUTPUT_DIR = os.path.join(BASE_DIR, f"downloads/{file_name}")
 
     try:
         img = Image.open(filename)
