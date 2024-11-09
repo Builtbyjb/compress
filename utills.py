@@ -11,7 +11,7 @@ ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4", "heic"]
 
 
 # Valid file extention
-def ValidateExtention(file_name: str) -> tuple:
+def ValidateExtention(file_name: str) -> tuple[bool, str]:
     ext_list = file_name.lower().split(".")
     idx = len(ext_list) - 1
     if ext_list[idx] in ALLOWED_EXT:
@@ -24,7 +24,7 @@ ALLOWED_TYPE = ["image", "video", "application"]
 
 
 # Confirm content type
-def ValidateType(content_type: str) -> tuple:
+def ValidateType(content_type: str) -> tuple[bool, str]:
     type_re = re.compile(r'(^[a-z]+)/')
     type_match = type_re.search(content_type)
     type_s = type_match.group(1)
@@ -49,7 +49,7 @@ async def saveFile(file: UploadFile) -> str:
 
 
 # Reduce file height and width
-def compressSize(file_size: tuple, quality: int) -> tuple:
+def compressSize(file_size: tuple[int, int], quality: int) -> tuple[int, int]:
     compress_percentage = quality / 100
 
     width = math.floor(file_size[0] * compress_percentage)

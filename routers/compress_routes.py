@@ -27,7 +27,7 @@ async def compress_file(file: UploadFile):
 
     if is_valid_type and is_valid_ext:
 
-        if content_type == "image":
+        if content_type == "image" or content_type == "application":
             file_name = await saveFile(file)
             message, new_file_name, new_file_size = CompressImage(file_name)
 
