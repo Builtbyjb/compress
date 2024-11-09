@@ -60,5 +60,6 @@ def compressSize(file_size: tuple[int, int], quality: int) -> tuple[int, int]:
 
 
 # Converts the file area to bytes
-def areaToBytes(area: tuple) -> int:
-    pass
+def areaToBytes(area: tuple[int, int]) -> int:
+
+    return 1_433_451

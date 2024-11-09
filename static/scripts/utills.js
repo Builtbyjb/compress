@@ -11,6 +11,7 @@ export function handleNavBar() {
 
 // Converts bytes to megabytes
 export function calcFileSize(fileSize) {
+    // TODO: make it more robust for KB and GB
     const bytes = 1_048_576
     const newSize = (fileSize / bytes).toFixed(2)
 

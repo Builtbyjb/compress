@@ -15,7 +15,7 @@ app.include_router(compress_routes.router)
 
 templates = Jinja2Templates(directory="templates")
 app.mount("/static", StaticFiles(directory="static"), name="static")
-app.mount("/uploads", StaticFiles(directory="uploads"), name="uploads")
+app.mount("/compressed", StaticFiles(directory="compressed"), name="compressed")
 
 auth = True
 

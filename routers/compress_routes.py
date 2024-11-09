@@ -31,17 +31,26 @@ async def compress_file(file: UploadFile):
             file_name = await saveFile(file)
             message, new_file_name, new_file_size = CompressImage(file_name)
 
-            return {
-                "message": message,
-                "fileName": new_file_name,
-                "fileSize": new_file_size,
-            }
-
+            if message == "Success":
+                return {
+                    "message": message,
+                    "fileDownloadName": new_file_name,
+                    "compressedFileSize": new_file_size,
+                }
+            else:
+                raise HTTPException(
+                    status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
+                    detail="Compression Error"
+                )
         elif content_type == "video":
             pass
-
         else:
             raise HTTPException(
-                status_code=400, detail="Uploaded file must be an image or a video")
+                status_code=status.HTTP_400_BAD_REQUEST,
+                detail="Uploaded file must be an image or a video"
+            )
     else:
-        raise HTTPException(status_code=400, detail="Not a valid file type")
+        raise HTTPException(
+            status_code=status.HTTP_400_BAD_REQUEST,
+            detail="Not a valid file type"
+        )

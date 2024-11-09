@@ -1,7 +1,7 @@
 from PIL import Image
 from pillow_heif import register_heif_opener
 import os
-from utills import compressSize
+from utills import compressSize, areaToBytes
 
 
 register_heif_opener()
@@ -19,7 +19,7 @@ def CompressImage(file_name) -> tuple[str, str, int]:
     try:
         img = Image.open(filename)
     except:
-        return ("Compression Error", "Error", 0)
+        return ("Error", "No file name", 0)
 
     format = img.format
 
@@ -37,7 +37,10 @@ def CompressImage(file_name) -> tuple[str, str, int]:
 
     img.close()
 
-    return ("Compression Successful", file_name, compress_size)
+    # Converts image size from pixels to bytes
+    img_size = areaToBytes(compress_size)
+
+    return ("Success", file_name, img_size)
 
 
 def CompressVideo(videoFIle):

@@ -50,20 +50,23 @@ async function uploadFile(file) {
 
     // console.log(file);
 
-    const response = await sendFile(formData)
-    if (response.message != undefined) {
+    const r = await sendFile(formData)
+    if (r.message != undefined) {
         fileItem.removeChild(compressElement)
+
+        // Calculate new file size
+        const newFileSize = calcFileSize(r.compressedFileSize)
 
         fileItem.innerHTML += `
         <p class="mt-1 me-2 text-sm text-gray-300 font-semibold"
-        >Compression size: ${1.45}MB</p>
+        >Compression size: ${newFileSize}</p>
         `;
 
         fileItem.innerHTML += `
         <p class="mt-1 mb-2 text-sm text-green-400 font-semibold">Complete!!!</p>
         `;
 
-        const btn = generateBtn(response.fileId, "test_img.jpg")
+        const btn = generateBtn(r.fileDownloadName, file.name)
         fileItem.appendChild(btn)
     } else {
         fileItem.removeChild(compressElement)
@@ -73,7 +76,7 @@ async function uploadFile(file) {
         `;
 
         fileItem.innerHTML += `
-        <p class="mt-2 me-2 text-sm text-red-400 font-semibold">${response.detail}</p>
+        <p class="mt-2 me-2 text-sm text-red-400 font-semibold">${r.detail}</p>
         `;
 
         fileItem.innerHTML += `
@@ -93,9 +96,9 @@ async function sendFile(formData) {
             body: formData
 
         })
-        const response = await file.json()
-        console.log(response)
-        return response
+        const r = await file.json()
+        console.log(r)
+        return r
 
     } catch (error) {
         console.error(error)
@@ -110,10 +113,10 @@ function generateCompressElement() {
     return p
 }
 
-function generateBtn(fileId, fileName) {
+function generateBtn(fileDownloadName, fileName) {
     const btn = document.createElement("button");
     btn.setAttribute("id", "compress-btn");
-    btn.setAttribute("data-fileid", `${fileId}`);
+    btn.setAttribute("data-filedownloadname", `${fileDownloadName}`);
     btn.setAttribute("data-filename", `${fileName}`);
     btn.className = "text-gray-300 bg-blue-700 hover:bg-white hover:bg-opacity-10 hover:text-white px-3 py-2 rounded-md text-sm font-medium";
     btn.textContent = "Download";
@@ -128,7 +131,7 @@ document.addEventListener("click", (event) => {
     if (element.id === "compress-btn") {
         const a = document.createElement("a");
         a.setAttribute("download", `${element.dataset.filename}`);
-        a.setAttribute("href", `/uploads/${element.dataset.fileid}`);
+        a.setAttribute("href", `/compressed/${element.dataset.filedownloadname}`);
         a.style.display = "none";
         document.body.append(a)
         a.click()
