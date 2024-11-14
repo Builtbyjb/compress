@@ -38,9 +38,9 @@ async function uploadFile(file, idx) {
         >Original size: ${fileSize}</p>
     `;
 
-    const compressElement = generateCompressElement()
+    const preloader = generatePreloader()
 
-    fileItem.appendChild(compressElement);
+    fileItem.appendChild(preloader);
     fileList.appendChild(fileItem);
 
     const formData = new FormData();
@@ -50,7 +50,7 @@ async function uploadFile(file, idx) {
 
     const r = await sendFile(formData)
     if (r.message != undefined) {
-        fileItem.removeChild(compressElement)
+        fileItem.removeChild(preloader)
 
         // Calculate new file size
         const newFileSize = calcFileSize(r.compressedFileSize)
@@ -69,7 +69,7 @@ async function uploadFile(file, idx) {
         const btn = generateBtn(r.fileDownloadName, r.fileDisplayName)
         fileItem.appendChild(btn)
     } else {
-        fileItem.removeChild(compressElement)
+        fileItem.removeChild(preloader)
 
         fileItem.innerHTML += `
         <p class="mt-2 me-2 text-sm text-red-400 font-semibold">Failed</p>
@@ -105,12 +105,17 @@ async function sendFile(formData) {
     }
 }
 
-function generateCompressElement() {
-    const p = document.createElement("p");
-    p.className = "mt-1 mb-2 text-sm text-blue-400 font-semibold"
-    p.textContent = 'Compressing...'
+function generatePreloader() {
+    const div = document.createElement("div");
+    div.className = "preloader"
+    div.innerHTML = `
+        <div class="mt-2 text-blue-400 text-sm font-semibold">Compressing...</div>
+        <div class="mt-2 relative w-100 h-1 bg-gray-200 rounded-full overflow-hidden">
+            <div class="absolute top-0 left-0 h-full w-1/3 bg-blue-500 rounded-full animate-slide"></div>
+        </div>
+    `;
 
-    return p
+    return div
 }
 
 function generateBtn(fileDownloadName, fileName) {
@@ -133,9 +138,9 @@ document.addEventListener("click", (event) => {
         a.setAttribute("download", `${element.dataset.filename}`);
         a.setAttribute("href", `/downloads/${element.dataset.filedownloadname}`);
         a.style.display = "none";
-        document.body.append(a)
-        a.click()
-        a.remove()
+        document.body.append(a);
+        a.click();
+        a.remove();
     }
 })
 
