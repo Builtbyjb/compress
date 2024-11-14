@@ -42,7 +42,6 @@ async def compress_file(file: UploadFile):
                     "compressedFileSize": new_file_size,
                 }
             else:
-                logger.info(message)
                 raise HTTPException(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                     detail=message
@@ -62,7 +61,6 @@ async def compress_file(file: UploadFile):
                     "compressedFileSize": new_file_size,
                 }
             else:
-                logger.info(message)
                 raise HTTPException(
                     status_code=status.HTTP_422_UNPROCESSABLE_ENTITY,
                     detail=message

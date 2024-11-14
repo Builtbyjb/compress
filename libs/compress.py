@@ -86,9 +86,10 @@ def CompressVideo(file_name: str) -> tuple[str, str, int]:
     # Gets the original fps of the uploaded video
     fps = int(cap.get(cv2.CAP_PROP_FPS))
 
-    crf = 28
+    # crf = 21  # High quality
+    crf = 28  # Low quality, where file size is important
     scale = 0.7
-    scale_option = f"scale=iw*{scale}:ih*{scale}"
+    scale_option = f"scale=trunc(iw*{scale}/2)*2:trunc(ih*{scale}/2)*2"
 
     # FFmpeg command to compress video and include audio
     command = [
@@ -100,6 +101,10 @@ def CompressVideo(file_name: str) -> tuple[str, str, int]:
         '-acodec', 'aac',  # Audio codec (AAC is widely compatible)
         '-b:a', '128k',  # Set audio bitrate (128 kbps for good quality)
         '-pix_fmt', 'yuv420p',  # Pixel format for compatibility
+        # Set color space to ITU-R BT.709 (default for HD video)
+        '-colorspace', '1',
+        '-color_primaries', '1',          # Set color primaries to BT.709
+        '-color_trc', '1',                # Set color transfer characteristic to BT.709
         # Fast start for .mp4 (improves playback on some devices)
         '-movflags', 'faststart',
         OUTPUT_PATH  # Output file path
@@ -107,7 +112,12 @@ def CompressVideo(file_name: str) -> tuple[str, str, int]:
 
     # Run the command
     try:
-        subprocess.run(command)
+        completedProcess = subprocess.run(command)
+
+        if completedProcess.returncode != 0:
+            logger.error("Compression error: subprocess command failed")
+            return ("Error: Compression Error", "none", 0)
+
     except Exception as e:
         logger.exception(e)
 
