@@ -4,3 +4,4 @@ venv
 uploads
 .env
 downloads
+log_file.log

@@ -116,7 +116,7 @@ function generateBtn(fileDownloadName, fileName) {
     btn.setAttribute("id", "compress-btn");
     btn.setAttribute("data-filedownloadname", `${fileDownloadName}`);
     btn.setAttribute("data-filename", `${fileName}`);
-    btn.className = "text-gray-300 bg-blue-700 hover:bg-white hover:bg-opacity-10 hover:text-white px-3 py-2 rounded-md text-sm font-medium";
+    btn.className = "text-gray-300 bg - blue - 700 hover: bg - white hover: bg - opacity - 10 hover: text - white px - 3 py - 2 rounded - md text - sm font - medium";
     btn.textContent = "Download";
 
     return btn
