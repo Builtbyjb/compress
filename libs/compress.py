@@ -70,7 +70,7 @@ def CompressImage(file_name: str, ext: str) -> tuple[str, str, int]:
     return ("Success", file_name, new_img_size)
 
 
-def CompressVideo(file_name: str) -> tuple[str, str, int]:
+async def CompressVideo(file_name: str) -> tuple[str, str, int]:
     FILE_PATH = f"{UPLOAD_DIR}/{file_name}"
     fname, _ = file_name.split('.')
     OUTPUT_PATH = os.path.join(BASE_DIR, f"downloads/{fname}.mp4")
@@ -112,7 +112,7 @@ def CompressVideo(file_name: str) -> tuple[str, str, int]:
 
     # Run the command
     try:
-        completedProcess = subprocess.run(command)
+        completedProcess = await subprocess.run(command)
 
         if completedProcess.returncode != 0:
             logger.error("Compression error: subprocess command failed")

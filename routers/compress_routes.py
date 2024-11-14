@@ -14,7 +14,7 @@ templates = Jinja2Templates(directory="templates")
 
 
 @router.get("/", status_code=status.HTTP_200_OK)
-async def get_compress_page(request: Request):
+def get_compress_page(request: Request):
     return templates.TemplateResponse(
         request=request,
         name="compress.html",
@@ -50,7 +50,7 @@ async def compress_file(file: UploadFile):
         # Compress video files
         elif content_type == "video":
             file_name, original_filename = await saveFile(file)
-            message, new_file_name, new_file_size = CompressVideo(file_name)
+            message, new_file_name, new_file_size = await CompressVideo(file_name)
             display_name = changeDisplayFileName(original_filename, 'mp4')
 
             if message == "Success":
