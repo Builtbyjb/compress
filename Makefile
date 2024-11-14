@@ -4,5 +4,8 @@ css:
 run:
 	python server.py
 
+# Installs ffmpeg for video compression
+setup:
+	apt install ffmpeg
 
 	

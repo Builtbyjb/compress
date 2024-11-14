@@ -12,14 +12,14 @@ function handleFiles() {
 
     if (files.length > 0) {
         for (let i = 0; i < files.length; i++) {
-            uploadFile(files[i]);
+            uploadFile(files[i], i);
         }
     } else {
         console.log("At least one file most be submitted");
     }
 }
 
-async function uploadFile(file) {
+async function uploadFile(file, idx) {
 
     // Validate file extentions
     const isValid = isValidExt(file.name)
@@ -33,7 +33,7 @@ async function uploadFile(file) {
     const fileItem = document.createElement('div');
     fileItem.className = 'bg-gray-800 p-4 rounded-lg shadow';
     fileItem.innerHTML = `
-        <p class="text-sm font-medium text-gray-300">${file.name}</p>
+        <p id="file-display-name-${idx}" class="text-sm font-medium text-gray-300">${file.name}</p>
         <p class="mt-1 mb-1 text-sm font-medium text-gray-300"
         >Original size: ${fileSize}</p>
     `;
@@ -64,7 +64,9 @@ async function uploadFile(file) {
         <p class="mt-1 mb-2 text-sm text-green-400 font-semibold">Complete!!!</p>
         `;
 
-        const btn = generateBtn(r.fileDownloadName, file.name)
+        changeDisplayFileName(r.fileDisplayName, idx)
+
+        const btn = generateBtn(r.fileDownloadName, r.fileDisplayName)
         fileItem.appendChild(btn)
     } else {
         fileItem.removeChild(compressElement)
@@ -116,7 +118,7 @@ function generateBtn(fileDownloadName, fileName) {
     btn.setAttribute("id", "compress-btn");
     btn.setAttribute("data-filedownloadname", `${fileDownloadName}`);
     btn.setAttribute("data-filename", `${fileName}`);
-    btn.className = "text-gray-300 bg - blue - 700 hover: bg - white hover: bg - opacity - 10 hover: text - white px - 3 py - 2 rounded - md text - sm font - medium";
+    btn.className = "text-gray-300 bg-blue-700 hover:bg-white hover:bg-opacity-10 hover:text-white px-3 py-2 rounded-md text-sm font-medium";
     btn.textContent = "Download";
 
     return btn
@@ -136,3 +138,7 @@ document.addEventListener("click", (event) => {
         a.remove()
     }
 })
+
+function changeDisplayFileName(fileName, idx) {
+    document.querySelector(`#file-display-name-${idx}`).textContent = fileName;
+}

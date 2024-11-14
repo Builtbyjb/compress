@@ -1,10 +1,10 @@
 from PIL import Image
 import cv2
-import numpy as np
+# import numpy as np
 from pillow_heif import register_heif_opener
 import os
 from logger import logger
-import pyheif
+import subprocess
 from utills import compressSize
 
 
@@ -16,21 +16,21 @@ BASE_DIR = os.getcwd()
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 
 
-def CompressImage(file_name, ext) -> tuple[str, str, int]:
-    filename = f"{UPLOAD_DIR}/{file_name}"
+def CompressImage(file_name: str, ext: str) -> tuple[str, str, int]:
+    FILE_PATH = f"{UPLOAD_DIR}/{file_name}"
     OUTPUT_PATH = os.path.join(BASE_DIR, f"downloads/{file_name}")
 
     # Read HEIC images using pyheif and convert to OpenCV format
     if ext == "heic":
         try:
-            img = Image.open(filename)
+            img = Image.open(FILE_PATH)
         except Exception as e:
             logger.error(f"Error: reading HEIC file: {e}")
             return ("Error reading HEIC file", "None", 0)
     else:
         # For other formats, read the image directly with OpenCV
         try:
-            img = cv2.imread(filename)
+            img = cv2.imread(FILE_PATH)
             # print("'''")
             # print(img)
             # print("'''")
@@ -70,50 +70,48 @@ def CompressImage(file_name, ext) -> tuple[str, str, int]:
     return ("Success", file_name, new_img_size)
 
 
-def CompressVideo(file_name):
-    filename = f"{UPLOAD_DIR}/{file_name}"
-    fn, _ = file_name.split('.')
-    OUTPUT_PATH = os.path.join(BASE_DIR, f"downloads/{fn}.mp4")
+def CompressVideo(file_name: str) -> tuple[str, str, int]:
+    FILE_PATH = f"{UPLOAD_DIR}/{file_name}"
+    fname, _ = file_name.split('.')
+    OUTPUT_PATH = os.path.join(BASE_DIR, f"downloads/{fname}.mp4")
 
-    codec = 'XVID'
-    scale = 0.5
-
-    # Open the input video file
-    cap = cv2.VideoCapture(filename)
+   # Open the input video file
+    cap = cv2.VideoCapture(FILE_PATH)
 
     # Check if the video was opened successfully
     if not cap.isOpened():
-        print("Error: Could not open video file.")
-        return
+        logger.error("Error: Could not open video file")
+        return ("Could not open video file", "Error", 0)
 
-    # Get the original video properties
-    width = int(cap.get(cv2.CAP_PROP_FRAME_WIDTH))
-    height = int(cap.get(cv2.CAP_PROP_FRAME_HEIGHT))
-    original_fps = int(cap.get(cv2.CAP_PROP_FPS))
+    # Gets the original fps of the uploaded video
+    fps = int(cap.get(cv2.CAP_PROP_FPS))
 
-    fps = original_fps
+    crf = 28
+    scale = 0.7
+    scale_option = f"scale=iw*{scale}:ih*{scale}"
 
-    # Set the codec and create VideoWriter for the output video
-    fourcc = cv2.VideoWriter_fourcc(*codec)
-    out = cv2.VideoWriter(OUTPUT_PATH, fourcc, fps,
-                          (int(width * scale), int(height * scale)))
+    # FFmpeg command to compress video and include audio
+    command = [
+        'ffmpeg', '-i', FILE_PATH,  # Input file
+        '-vf', scale_option,  # Scale the video
+        '-r', str(fps),  # Set frame rate
+        '-vcodec', 'libx264',  # Use H.264 codec
+        '-crf', str(crf),  # Compression quality
+        '-acodec', 'aac',  # Audio codec (AAC is widely compatible)
+        '-b:a', '128k',  # Set audio bitrate (128 kbps for good quality)
+        '-pix_fmt', 'yuv420p',  # Pixel format for compatibility
+        # Fast start for .mp4 (improves playback on some devices)
+        '-movflags', 'faststart',
+        OUTPUT_PATH  # Output file path
+    ]
 
-    while cap.isOpened():
-        ret, frame = cap.read()
-        if not ret:
-            break
-
-        # Resize the frame
-        frame = cv2.resize(frame, (int(width * scale), int(height * scale)))
-
-        # Write the compressed frame to the output video
-        out.write(frame)
-
-    # Release resources
-    cap.release()
-    out.release()
-    print("Video compression completed.")
+    # Run the command
+    try:
+        subprocess.run(command)
+    except Exception as e:
+        logger.exception(e)
 
     new_video_size = os.path.getsize(OUTPUT_PATH)
+    new_file_name = f"{fname}.mp4"
 
-    return ("Success", file_name, new_video_size)
+    return ("Success", new_file_name, new_video_size)
