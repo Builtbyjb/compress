@@ -49,7 +49,7 @@ async function uploadFile(file, idx) {
     // console.log(file);
 
     const r = await sendFile(formData)
-    if (r.message != undefined) {
+    if (r.message === "Success") {
         fileItem.removeChild(preloader)
 
         // Calculate new file size
@@ -129,7 +129,7 @@ function generateBtn(fileDownloadName, fileName) {
     return btn
 }
 
-// Download compress files
+// Download compressed files
 document.addEventListener("click", (event) => {
     const element = event.target;
 
