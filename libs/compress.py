@@ -20,38 +20,55 @@ def CompressImage(file_name: str, ext: str) -> tuple[str, str, int]:
     FILE_PATH = f"{UPLOAD_DIR}/{file_name}"
     OUTPUT_PATH = os.path.join(BASE_DIR, f"downloads/{file_name}")
 
-    # Read HEIC images using pyheif and convert to OpenCV format
-    if ext == "heic":
-        try:
-            img = Image.open(FILE_PATH)
-        except Exception as e:
-            logger.error(f"Error: reading HEIC file: {e}")
-            return ("Error reading HEIC file", "None", 0)
-    else:
-        # For other formats, read the image directly with OpenCV
+    # Compress jpeg and jpg images
+    if ext in ["jpg", "jpeg"]:
         try:
             img = cv2.imread(FILE_PATH)
-            # print("'''")
-            # print(img)
-            # print("'''")
         except Exception as e:
-            logger.error("Error: Could not open or find the image")
-            return ("Could not opnen or find the image", "None", 0)
+            logger.error("Could not open or find the JPG/JPEG image")
+            return ("Could not opnen or find the JPG/JPEG image", "None", 0)
 
-    # Set the compression parameters for JPEG and PNG
-    if ext in ["jpg", "jpeg"]:
         quality = 30
+
         compression_params = [cv2.IMWRITE_JPEG_QUALITY, quality]
-        cv2.imwrite(OUTPUT_PATH, img, compression_params)
+        success = cv2.imwrite(OUTPUT_PATH, img, compression_params)
 
+        if not success:
+            logger.error("Could not save file")
+            return ("Could not save file", "None", 0)
+
+    # Compress png images
     elif ext == "png":
-        quality = 30
-        compression_params = [cv2.IMWRITE_PNG_COMPRESSION,
-                              max(0, min(9, 9 - quality // 10))]
-        cv2.imwrite(OUTPUT_PATH, img, compression_params)
+        try:
+            # img = cv2.imread(FILE_PATH)
+            img = Image.open(FILE_PATH)
+        except Exception as e:
+            logger.error(f"Error: reading PNG image: {e}")
+            return ("Error reading PNG image", "None", 0)
 
-    # Set the compression paramters for HEIC
+        # image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        # pil_image = Image.fromarray(image)
+
+        quality = 50
+
+        compress_size = compressSize(img.size, quality)
+        img.resize(compress_size)
+        img.save(OUTPUT_PATH, format="PNG")
+        img.close()
+
+        # compression_params = [cv2.IMWRITE_PNG_COMPRESSION,
+        #                       max(0, min(9, 9 - quality // 10))]
+        # cv2.imwrite(OUTPUT_PATH, img, compression_params)
+
+    # Compress HEIC images
     elif ext == "heic":
+        try:
+            # img = cv2.imread(FILE_PATH)
+            img = Image.open(FILE_PATH)
+        except Exception as e:
+            logger.error(f"Error: reading HEIC image: {e}")
+            return ("Error reading HEIC image", "None", 0)
+
         quality = 75
         compress_size = compressSize(img.size, quality)
 
@@ -70,7 +87,7 @@ def CompressImage(file_name: str, ext: str) -> tuple[str, str, int]:
     return ("Success", file_name, new_img_size)
 
 
-async def CompressVideo(file_name: str) -> tuple[str, str, int]:
+def CompressVideo(file_name: str) -> tuple[str, str, int]:
     FILE_PATH = f"{UPLOAD_DIR}/{file_name}"
     fname, _ = file_name.split('.')
     OUTPUT_PATH = os.path.join(BASE_DIR, f"downloads/{fname}.mp4")
@@ -112,7 +129,7 @@ async def CompressVideo(file_name: str) -> tuple[str, str, int]:
 
     # Run the command
     try:
-        completedProcess = await subprocess.run(command)
+        completedProcess = subprocess.run(command)
 
         if completedProcess.returncode != 0:
             logger.error("Compression error: subprocess command failed")

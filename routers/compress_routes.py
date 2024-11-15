@@ -30,14 +30,14 @@ async def compress_file(file: UploadFile):
 
         # Compress image files
         if content_type == "image" or content_type == "application":
-            file_name = await saveFile(file)
+            file_name, original_filename = await saveFile(file)
             message, new_file_name, new_file_size = CompressImage(
                 file_name, ext)
 
             if message == "Success":
                 return {
                     "message": message,
-                    "fileDisplayName": file.filename,
+                    "fileDisplayName": original_filename,
                     "fileDownloadName": new_file_name,
                     "compressedFileSize": new_file_size,
                 }
@@ -50,7 +50,7 @@ async def compress_file(file: UploadFile):
         # Compress video files
         elif content_type == "video":
             file_name, original_filename = await saveFile(file)
-            message, new_file_name, new_file_size = await CompressVideo(file_name)
+            message, new_file_name, new_file_size = CompressVideo(file_name)
             display_name = changeDisplayFileName(original_filename, 'mp4')
 
             if message == "Success":
