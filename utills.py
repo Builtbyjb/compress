@@ -65,3 +65,12 @@ def changeDisplayFileName(file_name: str, ext: str) -> str:
     file_list = file_name.split('.')
     new_display_name = f"{file_list[0]}.{ext}"
     return new_display_name
+
+
+# Validate file size
+def ValidateSize(file_size: int) -> bool:
+    g_bytes = 1_073_741_824
+    if file_size > g_bytes:
+        return False
+    else:
+        return True

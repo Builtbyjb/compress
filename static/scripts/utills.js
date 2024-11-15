@@ -48,3 +48,13 @@ export function isValidExt(fileName) {
 
     return isValid
 }
+
+// Validate file size
+export function isValidSize(fileSize) {
+    const gBytes = 1_073_741_824
+    if (fileSize > gBytes) {
+        return false
+    } else {
+        return true
+    }
+}
