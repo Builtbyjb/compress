@@ -4,8 +4,10 @@ css:
 run:
 	python server.py
 
-# Installs ffmpeg for video compression
 setup:
-	apt install ffmpeg
+# Installs pngquant for png image compression (UNIX system)
+	apt install pngquant
+# Installs ffmpeg for video compression (UNIX system)
+	apt install ffmpeg 
 
 	

@@ -7,7 +7,7 @@ import re
 BASE_DIR = os.getcwd()
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 
-ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4", "heic"]
+ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4", "heic", "heif"]
 
 
 # Valid file extention

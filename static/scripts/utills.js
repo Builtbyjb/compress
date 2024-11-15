@@ -33,7 +33,7 @@ export function calcFileSize(fileSize) {
     }
 }
 
-const ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4", "heic"]
+const ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4", "heic", "heif"]
 
 // Validate file extention
 export function isValidExt(fileName) {

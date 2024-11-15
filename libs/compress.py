@@ -1,6 +1,5 @@
 from PIL import Image
 import cv2
-# import numpy as np
 from pillow_heif import register_heif_opener
 import os
 from logger import logger
@@ -39,28 +38,23 @@ def CompressImage(file_name: str, ext: str) -> tuple[str, str, int]:
 
     # Compress png images
     elif ext == "png":
+
+        # Use pngquant to compress png files
+        command = ['pngquant', '--force', '--output',
+                   OUTPUT_PATH, FILE_PATH]
+
+        # Run the command
         try:
-            # img = cv2.imread(FILE_PATH)
-            img = Image.open(FILE_PATH)
+            completedProcess = subprocess.run(command, check=True)
+
+            if completedProcess.returncode != 0:
+                logger.error("Compression error: subprocess command failed")
+                return ("Error: Compression Error", "none", 0)
+
         except Exception as e:
-            logger.error(f"Error: reading PNG image: {e}")
-            return ("Error reading PNG image", "None", 0)
+            logger.exception(e)
 
-        # image = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
-        # pil_image = Image.fromarray(image)
-
-        quality = 50
-
-        compress_size = compressSize(img.size, quality)
-        img.resize(compress_size)
-        img.save(OUTPUT_PATH, format="PNG")
-        img.close()
-
-        # compression_params = [cv2.IMWRITE_PNG_COMPRESSION,
-        #                       max(0, min(9, 9 - quality // 10))]
-        # cv2.imwrite(OUTPUT_PATH, img, compression_params)
-
-    # Compress HEIC images
+        # Compress HEIC images
     elif ext == "heic":
         try:
             # img = cv2.imread(FILE_PATH)
@@ -69,11 +63,11 @@ def CompressImage(file_name: str, ext: str) -> tuple[str, str, int]:
             logger.error(f"Error: reading HEIC image: {e}")
             return ("Error reading HEIC image", "None", 0)
 
-        quality = 75
+        quality = 70
         compress_size = compressSize(img.size, quality)
 
         img = img.resize(compress_size)
-        img.save(OUTPUT_PATH, format="HEIF")
+        img.save(OUTPUT_PATH, format="HEIF", optimize=True)
 
         img.close()
 
@@ -129,7 +123,7 @@ def CompressVideo(file_name: str) -> tuple[str, str, int]:
 
     # Run the command
     try:
-        completedProcess = subprocess.run(command)
+        completedProcess = subprocess.run(command, check=True)
 
         if completedProcess.returncode != 0:
             logger.error("Compression error: subprocess command failed")
