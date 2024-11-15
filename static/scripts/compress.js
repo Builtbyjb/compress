@@ -36,8 +36,9 @@ async function uploadFile(file, idx) {
     const validExt = isValidExt(file.name)
     const validSize = isValidSize(file.size)
 
+    let preloader = ""
     if (validExt && validSize) {
-        const preloader = generatePreloader()
+        preloader = generatePreloader()
         fileItem.appendChild(preloader);
     }
 
