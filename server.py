@@ -1,10 +1,13 @@
 from fastapi import FastAPI, Request
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
+from contextlib import asynccontextmanager
 from routers import compress_routes
 import uvicorn
 import os
 from dotenv import load_dotenv
+from utills.clean_up import fileCleanUp
+from database.database import create_db_and_tables
 
 load_dotenv()
 
@@ -12,7 +15,12 @@ HOST = os.getenv("HOST")
 PORT = int(os.getenv("PORT"))
 
 
-app = FastAPI()
+@asynccontextmanager
+async def lifespan(app: FastAPI):
+    create_db_and_tables()
+    yield
+
+app = FastAPI(lifespan=lifespan)
 app.include_router(compress_routes.router)
 
 
@@ -38,8 +46,8 @@ async def index(request: Request):
             context={}
         )
 
-
 if __name__ == "__main__":
+    fileCleanUp()
     uvicorn.run(
         "server:app",
         host=HOST,

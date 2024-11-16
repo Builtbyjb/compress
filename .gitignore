@@ -5,3 +5,4 @@ uploads
 .env
 downloads
 log_file.log
+database.db

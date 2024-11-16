@@ -4,7 +4,7 @@ from pillow_heif import register_heif_opener
 import os
 from logger import logger
 import subprocess
-from utills import compressSize
+from utills.utills import compressSize
 
 
 register_heif_opener()

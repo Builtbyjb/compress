@@ -3,11 +3,20 @@ import os
 from fastapi import UploadFile
 import math
 import re
+from typing import Annotated
+from fastapi import Depends
+from database.database import get_session, UploadFiles, DownloadFiles
+from database.schema import File
+from sqlmodel import Session
+from datetime import datetime, timedelta
 
 BASE_DIR = os.getcwd()
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
-
+EXPIRED_HRS = 1
 ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4", "heic", "heif"]
+ALLOWED_TYPE = ["image", "video", "application"]
+
+database = Annotated[Session, Depends(get_session)]
 
 
 # Valid file extention
@@ -18,9 +27,6 @@ def ValidateExtention(file_name: str) -> tuple[bool, str]:
         return (True, ext_list[idx])
     else:
         return (False, "")
-
-
-ALLOWED_TYPE = ["image", "video", "application"]
 
 
 # Confirm content type
@@ -35,6 +41,20 @@ def ValidateType(content_type: str) -> tuple[bool, str]:
         return (False, "")
 
 
+# Add uploaded files to the database
+def registerUploadFile(file: UploadFiles, db: database):
+    db.add(file)
+    db.commit()
+    db.refresh(file)
+
+
+# Add downloaded files to the database
+def registerDownloadFile(file: DownloadFiles, db: database):
+    db.add(file)
+    db.commit()
+    db.refresh(file)
+
+
 # Saves a file to disk
 async def saveFile(file: UploadFile) -> tuple[str, str]:
     _, file_ext = ValidateExtention(file.filename)
@@ -45,6 +65,17 @@ async def saveFile(file: UploadFile) -> tuple[str, str]:
 
     with open(f"{UPLOAD_DIR}/{file.filename}", "wb") as f:
         f.write(r_file)
+
+    uploaded_time = datetime.now()
+    expiring_time = datetime.now() + timedelta(hours=EXPIRED_HRS)
+
+    upload_file = UploadFiles(
+        name=file.filename,
+        uploaded=uploaded_time,
+        expired=expiring_time
+    )
+
+    registerUploadFile(upload_file, database)
 
     return (file.filename, original_filename)
 

@@ -1,6 +1,6 @@
 from fastapi import APIRouter, Request, UploadFile, status, HTTPException
 from fastapi.templating import Jinja2Templates
-from utills import (
+from utills.utills import (
     ValidateExtention,
     ValidateType,
     saveFile,
