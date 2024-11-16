@@ -17,7 +17,7 @@ database = Annotated[Session, Depends(get_session)]
 register_heif_opener()
 
 
-EXPIRED_HRS = 1
+EXPIRED_AT = os.getenv("EXPIRED_AT")
 
 # Get current working directing
 BASE_DIR = os.getcwd()
@@ -85,7 +85,7 @@ def CompressImage(file_name: str, ext: str, db: database) -> tuple[str, str, int
         return ("Unsupported file format", "None", 0)
 
     uploaded_time = datetime.now()
-    expiring_time = datetime.now() + timedelta(hours=EXPIRED_HRS)
+    expiring_time = datetime.now() + timedelta(hours=EXPIRED_AT)
 
     download_file = File(
         name=file_name,
@@ -153,7 +153,7 @@ def CompressVideo(file_name: str, db: database) -> tuple[str, str, int]:
         logger.exception(e)
 
     uploaded_time = datetime.now()
-    expiring_time = datetime.now() + timedelta(hours=EXPIRED_HRS)
+    expiring_time = datetime.now() + timedelta(hours=EXPIRED_AT)
 
     new_file_name = f"{fname}.mp4"
 

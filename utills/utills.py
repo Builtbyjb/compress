@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 BASE_DIR = os.getcwd()
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
-EXPIRED_HRS = 1
+EXPIRED_AT = os.getenv("EXPIRED_AT")
 ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4", "heic", "heif"]
 ALLOWED_TYPE = ["image", "video", "application"]
 
@@ -79,7 +79,7 @@ async def saveFile(file: UploadFile, db: database) -> tuple[str, str]:
         f.write(r_file)
 
     uploaded_time = datetime.now()
-    expiring_time = datetime.now() + timedelta(hours=EXPIRED_HRS)
+    expiring_time = datetime.now() + timedelta(hours=EXPIRED_AT)
 
     upload_file = File(
         name=file.filename,

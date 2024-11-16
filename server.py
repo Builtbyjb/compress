@@ -1,4 +1,4 @@
-from fastapi import FastAPI, Request
+from fastapi import FastAPI, Request, Depends
 from fastapi.templating import Jinja2Templates
 from fastapi.staticfiles import StaticFiles
 from contextlib import asynccontextmanager
@@ -8,11 +8,16 @@ import os
 from dotenv import load_dotenv
 from utills.clean_up import fileCleanUp
 from database.database import create_db_and_tables
+from database.database import get_session
+from sqlmodel import Session
+from typing import Annotated
 
 load_dotenv()
 
 HOST = os.getenv("HOST")
 PORT = int(os.getenv("PORT"))
+
+database = Annotated[Session, Depends(get_session)]
 
 
 @asynccontextmanager
