@@ -4,18 +4,27 @@ from pillow_heif import register_heif_opener
 import os
 from logger import logger
 import subprocess
-from utills.utills import compressSize
+from utills.utills import compressSize, registerDownloadFile
+from datetime import datetime, timedelta
+from typing import Annotated
+from fastapi import Depends
+from database.schema import File
+from sqlmodel import Session
+from database.database import get_session
 
 
+database = Annotated[Session, Depends(get_session)]
 register_heif_opener()
 
+
+EXPIRED_HRS = 1
 
 # Get current working directing
 BASE_DIR = os.getcwd()
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
 
 
-def CompressImage(file_name: str, ext: str) -> tuple[str, str, int]:
+def CompressImage(file_name: str, ext: str, db: database) -> tuple[str, str, int]:
     FILE_PATH = f"{UPLOAD_DIR}/{file_name}"
     OUTPUT_PATH = os.path.join(BASE_DIR, f"downloads/{file_name}")
 
@@ -75,13 +84,24 @@ def CompressImage(file_name: str, ext: str) -> tuple[str, str, int]:
         logger.error(f"Error: unsupported file format -> {ext}")
         return ("Unsupported file format", "None", 0)
 
+    uploaded_time = datetime.now()
+    expiring_time = datetime.now() + timedelta(hours=EXPIRED_HRS)
+
+    download_file = File(
+        name=file_name,
+        uploaded=uploaded_time,
+        expired=expiring_time
+    )
+
+    registerDownloadFile(download_file, db)
+
     # Gets new file size
     new_img_size = os.path.getsize(OUTPUT_PATH)
 
     return ("Success", file_name, new_img_size)
 
 
-def CompressVideo(file_name: str) -> tuple[str, str, int]:
+def CompressVideo(file_name: str, db: database) -> tuple[str, str, int]:
     FILE_PATH = f"{UPLOAD_DIR}/{file_name}"
     fname, _ = file_name.split('.')
     OUTPUT_PATH = os.path.join(BASE_DIR, f"downloads/{fname}.mp4")
@@ -132,7 +152,19 @@ def CompressVideo(file_name: str) -> tuple[str, str, int]:
     except Exception as e:
         logger.exception(e)
 
-    new_video_size = os.path.getsize(OUTPUT_PATH)
+    uploaded_time = datetime.now()
+    expiring_time = datetime.now() + timedelta(hours=EXPIRED_HRS)
+
     new_file_name = f"{fname}.mp4"
+
+    download_file = File(
+        name=new_file_name,
+        uploaded=uploaded_time,
+        expired=expiring_time
+    )
+
+    registerDownloadFile(download_file, db)
+
+    new_video_size = os.path.getsize(OUTPUT_PATH)
 
     return ("Success", new_file_name, new_video_size)

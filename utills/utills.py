@@ -42,21 +42,33 @@ def ValidateType(content_type: str) -> tuple[bool, str]:
 
 
 # Add uploaded files to the database
-def registerUploadFile(file: UploadFiles, db: database):
-    db.add(file)
+def registerUploadFile(file: File, db: Session):
+    f = UploadFiles(
+        name=file.name,
+        uploaded=file.uploaded,
+        expired=file.expired
+    )
+
+    db.add(f)
     db.commit()
-    db.refresh(file)
+    db.refresh(f)
 
 
 # Add downloaded files to the database
-def registerDownloadFile(file: DownloadFiles, db: database):
-    db.add(file)
+def registerDownloadFile(file: File, db: Session):
+    f = DownloadFiles(
+        name=file.name,
+        uploaded=file.uploaded,
+        expired=file.expired
+    )
+
+    db.add(f)
     db.commit()
-    db.refresh(file)
+    db.refresh(f)
 
 
 # Saves a file to disk
-async def saveFile(file: UploadFile) -> tuple[str, str]:
+async def saveFile(file: UploadFile, db: database) -> tuple[str, str]:
     _, file_ext = ValidateExtention(file.filename)
     file_id = uuid.uuid4()
     original_filename = file.filename
@@ -69,13 +81,13 @@ async def saveFile(file: UploadFile) -> tuple[str, str]:
     uploaded_time = datetime.now()
     expiring_time = datetime.now() + timedelta(hours=EXPIRED_HRS)
 
-    upload_file = UploadFiles(
+    upload_file = File(
         name=file.filename,
         uploaded=uploaded_time,
         expired=expiring_time
     )
 
-    registerUploadFile(upload_file, database)
+    registerUploadFile(upload_file, db)
 
     return (file.filename, original_filename)
 

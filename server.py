@@ -47,7 +47,7 @@ async def index(request: Request):
         )
 
 if __name__ == "__main__":
-    fileCleanUp()
+    fileCleanUp()  # Removes uploaded and downloaded files
     uvicorn.run(
         "server:app",
         host=HOST,

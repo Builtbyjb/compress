@@ -9,7 +9,13 @@ from utills.utills import (
 )
 from libs.compress import CompressImage, CompressVideo
 from logger import logger
+from typing import Annotated
+from fastapi import Depends
+from database.database import get_session
+from sqlmodel import Session
 
+
+database = Annotated[Session, Depends(get_session)]
 
 router = APIRouter(
     prefix="/compress",
@@ -28,7 +34,7 @@ def get_compress_page(request: Request):
 
 
 @router.post("/", status_code=status.HTTP_202_ACCEPTED)
-async def compress_file(file: UploadFile):
+async def compress_file(file: UploadFile, db: database):
     is_valid_size = ValidateSize(file.size)
     is_valid_type, content_type = ValidateType(file.headers['content-type'])
     is_valid_ext, ext = ValidateExtention(file.filename)
@@ -38,9 +44,10 @@ async def compress_file(file: UploadFile):
 
             # Compress image files
             if content_type == "image" or content_type == "application":
-                file_name, original_filename = await saveFile(file)
+                file_name, original_filename = await saveFile(file, db)
                 message, new_file_name, new_file_size = CompressImage(
-                    file_name, ext)
+                    file_name, ext, db
+                )
 
                 if message == "Success":
                     return {
@@ -57,9 +64,11 @@ async def compress_file(file: UploadFile):
 
             # Compress video files
             elif content_type == "video":
-                file_name, original_filename = await saveFile(file)
+                file_name, original_filename = await saveFile(file, db)
                 message, new_file_name, new_file_size = CompressVideo(
-                    file_name)
+                    file_name, db
+                )
+
                 display_name = changeDisplayFileName(original_filename, 'mp4')
 
                 if message == "Success":
