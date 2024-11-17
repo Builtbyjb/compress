@@ -1,19 +1,18 @@
-from datetime import datetime
 from sqlmodel import Field, Session, SQLModel, create_engine
 
 
 class UploadFiles(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True)
-    uploaded: datetime = Field(index=True)
-    expired: datetime = Field(index=True)
+    uploaded: str = Field(index=True)
+    expired: str = Field(index=True)
 
 
 class DownloadFiles(SQLModel, table=True):
     id: int | None = Field(default=None, primary_key=True)
     name: str = Field(index=True)
-    uploaded: datetime = Field(index=True)
-    expired: datetime = Field(index=True)
+    uploaded: str = Field(index=True)
+    expired: str = Field(index=True)
 
 
 sqlite_file_name = "database.db"

@@ -45,10 +45,10 @@ def ValidateType(content_type: str) -> tuple[bool, str]:
 
 
 # Format time
-def FormatTime(time: datetime) -> datetime:
+def FormatTime(time: datetime) -> str:
     # formatted_time = time.strftime("%Y-%m-%d %H:%M") #Includes minutes
     formatted_time = time.strftime("%Y-%m-%d %H")
-    return formatted_time
+    return str(formatted_time)
 
 
 # Add uploaded files to the database
