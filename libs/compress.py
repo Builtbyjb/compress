@@ -17,7 +17,7 @@ database = Annotated[Session, Depends(get_session)]
 register_heif_opener()
 
 
-EXPIRED_AT = os.getenv("EXPIRED_AT")
+EXPIRED_AT = int(os.getenv("EXPIRED_AT"))
 
 # Get current working directing
 BASE_DIR = os.getcwd()

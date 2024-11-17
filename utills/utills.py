@@ -12,7 +12,7 @@ from datetime import datetime, timedelta
 
 BASE_DIR = os.getcwd()
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")
-EXPIRED_AT = os.getenv("EXPIRED_AT")
+EXPIRED_AT = int(os.getenv("EXPIRED_AT"))
 ALLOWED_EXT = ["jpg", "jpeg", "png", "mkv", "mov", "mp4", "heic", "heif"]
 ALLOWED_TYPE = ["image", "video", "application"]
 
