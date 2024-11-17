@@ -14,6 +14,9 @@ CURRENT_DIR = os.getcwd()
 # Cleans up uploads directory
 def UCleanUp():
     DIR = os.path.join(CURRENT_DIR, "uploads")
+    print("...")
+    print("Starting up UCleanUp...")
+    print("...")
 
     while True:
         with next(get_session()) as db:
@@ -33,6 +36,9 @@ def UCleanUp():
 # Cleans up downloads directory
 def DCleanUp():
     DIR = os.path.join(CURRENT_DIR, "downloads")
+    print("...")
+    print("Starting up DCleanUp...")
+    print("...")
 
     while True:
         with next(get_session()) as db:
