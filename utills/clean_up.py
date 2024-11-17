@@ -6,6 +6,7 @@ import os
 from database.database import get_session, UploadFiles, DownloadFiles
 from sqlmodel import select
 from utills.utills import FormatTime
+import time
 
 
 CURRENT_DIR = os.getcwd()
@@ -14,11 +15,10 @@ CURRENT_DIR = os.getcwd()
 # Cleans up uploads directory
 def UCleanUp():
     DIR = os.path.join(CURRENT_DIR, "uploads")
-    print("...")
-    print("Starting up UCleanUp...")
-    print("...")
+    print("Starting Upload CleanUp...")
 
     while True:
+        start_time = time.time()
         with next(get_session()) as db:
             upload_files = db.exec(select(UploadFiles)).all()
 
@@ -26,21 +26,24 @@ def UCleanUp():
                 current_time = FormatTime(datetime.now())
                 if current_time == file.expired:
                     COMMAND = [f"rm -rf {file.name}"]
+                    # TODO Clear sqlite database
 
                     try:
                         subprocess.run(COMMAND, cwd=DIR, shell=True)
                     except Exception as e:
                         logger.error("Could not run subprocess")
+        end_time = time.time()
+        duration = end_time - start_time
+        logger.info(f"Upload clean up took {duration} to run")
 
 
 # Cleans up downloads directory
 def DCleanUp():
     DIR = os.path.join(CURRENT_DIR, "downloads")
-    print("...")
-    print("Starting up DCleanUp...")
-    print("...")
+    print("Starting Download CleanUp...")
 
     while True:
+        start_time = time.time()
         with next(get_session()) as db:
             download_files = db.exec(select(DownloadFiles)).all()
 
@@ -48,11 +51,15 @@ def DCleanUp():
                 current_time = FormatTime(datetime.now())
                 if current_time == file.expired:
                     COMMAND = [f"rm -rf {file.name}"]
+                    # TODO Clear sqlite database
 
                 try:
                     subprocess.run(COMMAND, cwd=DIR, shell=True)
                 except Exception as e:
                     logger.error("Could not run subprocess")
+        end_time = time.time()
+        duration = end_time - start_time
+        logger.info(f"Download clean up took {duration} to run")
 
 
 # Deletes files after a specified period of time
