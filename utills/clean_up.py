@@ -6,7 +6,6 @@ import os
 from database.database import get_session, UploadFiles, DownloadFiles
 from sqlmodel import select
 from utills.utills import FormatTime
-import time
 
 
 CURRENT_DIR = os.getcwd()
@@ -18,7 +17,6 @@ def UCleanUp():
     print("Starting Upload CleanUp...")
 
     while True:
-        start_time = time.time()
         with next(get_session()) as db:
             upload_files = db.exec(select(UploadFiles)).all()
 
@@ -35,10 +33,6 @@ def UCleanUp():
                             "Could not run upload clean up subprocess"
                         )
 
-        end_time = time.time()
-        duration = end_time - start_time
-        logger.info(f"Upload clean up took {duration} to run")
-
 
 # Cleans up downloads directory
 def DCleanUp():
@@ -46,7 +40,6 @@ def DCleanUp():
     print("Starting Download CleanUp...")
 
     while True:
-        start_time = time.time()
         with next(get_session()) as db:
             download_files = db.exec(select(DownloadFiles)).all()
 
@@ -62,10 +55,6 @@ def DCleanUp():
                         logger.error(
                             "Could not run download clean up subprocess"
                         )
-
-        end_time = time.time()
-        duration = end_time - start_time
-        logger.info(f"Download clean up took {duration} to run")
 
 
 # Deletes files after a specified period of time
