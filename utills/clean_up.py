@@ -5,11 +5,13 @@ from logger import logger
 import os
 from database.database import get_session, UploadFiles, DownloadFiles
 from sqlmodel import select
+from utills.utills import FormatTime
 
 
 CURRENT_DIR = os.getcwd()
 
 
+# Cleans up uploads directory
 def UCleanUp():
     DIR = os.path.join(CURRENT_DIR, "uploads")
 
@@ -18,7 +20,7 @@ def UCleanUp():
             upload_files = db.exec(select(UploadFiles)).all()
 
             for file in upload_files:
-                current_time = datetime.now().strftime("%Y-%m-%d %H:%M")
+                current_time = FormatTime(datetime.now())
                 if current_time == file.expired:
                     COMMAND = [f"rm -rf {file.name}"]
 
@@ -28,6 +30,7 @@ def UCleanUp():
                         logger.error("Could not run subprocess")
 
 
+# Cleans up downloads directory
 def DCleanUp():
     DIR = os.path.join(CURRENT_DIR, "downloads")
 
@@ -36,7 +39,7 @@ def DCleanUp():
             download_files = db.exec(select(DownloadFiles)).all()
 
             for file in download_files:
-                current_time = datetime.now()
+                current_time = FormatTime(datetime.now())
                 if current_time == file.expired:
                     COMMAND = [f"rm -rf {file.name}"]
 

@@ -4,7 +4,7 @@ from pillow_heif import register_heif_opener
 import os
 from logger import logger
 import subprocess
-from utills.utills import compressSize, registerDownloadFile
+from utills.utills import compressSize, registerDownloadFile, FormatTime
 from datetime import datetime, timedelta
 from typing import Annotated
 from fastapi import Depends
@@ -14,11 +14,11 @@ from database.database import get_session
 from dotenv import load_dotenv
 
 
-database = Annotated[Session, Depends(get_session)]
 register_heif_opener()
 load_dotenv()
 
 
+database = Annotated[Session, Depends(get_session)]
 EXPIRED_AT = int(os.getenv("EXPIRED_AT"))
 
 # Get current working directing
@@ -91,8 +91,8 @@ def CompressImage(file_name: str, ext: str, db: database) -> tuple[str, str, int
 
     download_file = File(
         name=file_name,
-        uploaded=uploaded_time.strftime("%Y-%m-%d %H:%M"),
-        expired=expiring_time.strftime("%Y-%m-%d %H:%M")
+        uploaded=FormatTime(uploaded_time),
+        expired=FormatTime(expiring_time)
     )
 
     registerDownloadFile(download_file, db)
@@ -161,8 +161,8 @@ def CompressVideo(file_name: str, db: database) -> tuple[str, str, int]:
 
     download_file = File(
         name=new_file_name,
-        uploaded=uploaded_time.strftime("%Y-%m-%d %H:%M"),
-        expired=expiring_time.strftime("%Y-%m-%d %H:%M")
+        uploaded=FormatTime(uploaded_time),
+        expired=FormatTime(expiring_time)
     )
 
     registerDownloadFile(download_file, db)

@@ -44,6 +44,13 @@ def ValidateType(content_type: str) -> tuple[bool, str]:
         return (False, "")
 
 
+# Format time
+def FormatTime(time: datetime) -> datetime:
+    # formatted_time = time.strftime("%Y-%m-%d %H:%M") #Includes minutes
+    formatted_time = time.strftime("%Y-%m-%d %H")
+    return formatted_time
+
+
 # Add uploaded files to the database
 def registerUploadFile(file: File, db: Session):
     f = UploadFiles(
@@ -86,8 +93,8 @@ async def saveFile(file: UploadFile, db: database) -> tuple[str, str]:
 
     upload_file = File(
         name=file.filename,
-        uploaded=uploaded_time.strftime("%Y-%m-%d %H:%M"),
-        expired=expiring_time.strftime("%Y-%m-%d %H:%M")
+        uploaded=FormatTime(uploaded_time),
+        expired=FormatTime(expiring_time)
     )
 
     registerUploadFile(upload_file, db)
