@@ -31,7 +31,10 @@ def UCleanUp():
                     try:
                         subprocess.run(COMMAND, cwd=DIR, shell=True)
                     except Exception as e:
-                        logger.error("Could not run subprocess")
+                        logger.error(
+                            "Could not run upload clean up subprocess"
+                        )
+
         end_time = time.time()
         duration = end_time - start_time
         logger.info(f"Upload clean up took {duration} to run")
@@ -53,10 +56,13 @@ def DCleanUp():
                     COMMAND = [f"rm -rf {file.name}"]
                     # TODO Clear sqlite database
 
-                try:
-                    subprocess.run(COMMAND, cwd=DIR, shell=True)
-                except Exception as e:
-                    logger.error("Could not run subprocess")
+                    try:
+                        subprocess.run(COMMAND, cwd=DIR, shell=True)
+                    except Exception as e:
+                        logger.error(
+                            "Could not run download clean up subprocess"
+                        )
+
         end_time = time.time()
         duration = end_time - start_time
         logger.info(f"Download clean up took {duration} to run")
