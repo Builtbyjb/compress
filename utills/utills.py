@@ -9,6 +9,9 @@ from database.database import get_session, UploadFiles, DownloadFiles
 from database.schema import File
 from sqlmodel import Session
 from datetime import datetime, timedelta
+from dotenv import load_dotenv
+
+load_dotenv()
 
 BASE_DIR = os.getcwd()
 UPLOAD_DIR = os.path.join(BASE_DIR, "uploads")

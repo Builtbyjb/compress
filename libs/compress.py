@@ -11,10 +11,12 @@ from fastapi import Depends
 from database.schema import File
 from sqlmodel import Session
 from database.database import get_session
+from dotenv import load_dotenv
 
 
 database = Annotated[Session, Depends(get_session)]
 register_heif_opener()
+load_dotenv()
 
 
 EXPIRED_AT = int(os.getenv("EXPIRED_AT"))
