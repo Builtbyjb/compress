@@ -18,7 +18,7 @@ def UCleanUp():
             upload_files = db.exec(select(UploadFiles)).all()
 
             for file in upload_files:
-                current_time = datetime.now()
+                current_time = datetime.now().strftime("%Y-%m-%d %H:%M")
                 if current_time == file.expired:
                     COMMAND = [f"rm -rf {file.name}"]
 

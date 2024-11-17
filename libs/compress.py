@@ -91,8 +91,8 @@ def CompressImage(file_name: str, ext: str, db: database) -> tuple[str, str, int
 
     download_file = File(
         name=file_name,
-        uploaded=uploaded_time,
-        expired=expiring_time
+        uploaded=uploaded_time.strftime("%Y-%m-%d %H:%M"),
+        expired=expiring_time.strftime("%Y-%m-%d %H:%M")
     )
 
     registerDownloadFile(download_file, db)
@@ -161,8 +161,8 @@ def CompressVideo(file_name: str, db: database) -> tuple[str, str, int]:
 
     download_file = File(
         name=new_file_name,
-        uploaded=uploaded_time,
-        expired=expiring_time
+        uploaded=uploaded_time.strftime("%Y-%m-%d %H:%M"),
+        expired=expiring_time.strftime("%Y-%m-%d %H:%M")
     )
 
     registerDownloadFile(download_file, db)

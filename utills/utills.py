@@ -86,8 +86,8 @@ async def saveFile(file: UploadFile, db: database) -> tuple[str, str]:
 
     upload_file = File(
         name=file.filename,
-        uploaded=uploaded_time,
-        expired=expiring_time
+        uploaded=uploaded_time.strftime("%Y-%m-%d %H:%M"),
+        expired=expiring_time.strftime("%Y-%m-%d %H:%M")
     )
 
     registerUploadFile(upload_file, db)
