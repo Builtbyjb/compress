@@ -24,10 +24,19 @@ def UCleanUp():
                 current_time = FormatTime(datetime.now())
                 if current_time == file.expired:
                     COMMAND = [f"rm -rf {file.name}"]
-                    # TODO Clear sqlite database
 
                     try:
                         subprocess.run(COMMAND, cwd=DIR, shell=True)
+                        f = db.exec(
+                            select(UploadFiles).where(UploadFiles.name == file.name)
+                        )
+                        if not f:
+                            logger.error(
+                                f"Could not find the file with the name {file.name}"
+                            )
+                        db.delete(f)
+                        db.commit()
+
                     except Exception as e:
                         logger.error(
                             "Could not run upload clean up subprocess"
@@ -47,10 +56,18 @@ def DCleanUp():
                 current_time = FormatTime(datetime.now())
                 if current_time == file.expired:
                     COMMAND = [f"rm -rf {file.name}"]
-                    # TODO Clear sqlite database
 
                     try:
                         subprocess.run(COMMAND, cwd=DIR, shell=True)
+                        f = db.exec(
+                            select(DownloadFiles).where(DownloadFiles.name == file.name)
+                        )
+                        if not f:
+                            logger.error(
+                                f"Could not find the file with the name {file.name}"
+                            )
+                        db.delete(f)
+                        db.commit()
                     except Exception as e:
                         logger.error(
                             "Could not run download clean up subprocess"
