@@ -29,7 +29,8 @@ def UCleanUp():
                         subprocess.run(COMMAND, cwd=DIR, shell=True)
                         f = db.exec(
                             select(UploadFiles).where(UploadFiles.name == file.name)
-                        )
+                        ).first()
+
                         if not f:
                             logger.error(
                                 f"Could not find the file with the name {file.name}"
@@ -61,7 +62,8 @@ def DCleanUp():
                         subprocess.run(COMMAND, cwd=DIR, shell=True)
                         f = db.exec(
                             select(DownloadFiles).where(DownloadFiles.name == file.name)
-                        )
+                        ).first()
+
                         if not f:
                             logger.error(
                                 f"Could not find the file with the name {file.name}"
