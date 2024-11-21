@@ -11,6 +11,7 @@ from database.database import create_db_and_tables
 from database.database import get_session
 from sqlmodel import Session
 from typing import Annotated
+from middleware import RateLimiter
 
 load_dotenv()
 
@@ -27,6 +28,8 @@ async def lifespan(app: FastAPI):
     yield
 
 app = FastAPI(lifespan=lifespan)
+app.add_middleware(RateLimiter)
+
 app.include_router(compress_routes.router)
 
 

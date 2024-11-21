@@ -35,6 +35,7 @@ def UCleanUp():
                             logger.error(
                                 f"Could not find the file with the name {file.name}"
                             )
+
                         db.delete(f)
                         db.commit()
 
@@ -68,8 +69,10 @@ def DCleanUp():
                             logger.error(
                                 f"Could not find the file with the name {file.name}"
                             )
+
                         db.delete(f)
                         db.commit()
+
                     except Exception as e:
                         logger.error(
                             "Could not run download clean up subprocess"
