@@ -38,8 +38,11 @@ function handleFiles() {
     const secs = d.getSeconds()
 
     if (files.length > 0) {
-        // Append infoDiv
-        fileList.appendChild(infoDiv)
+
+        if (!fileList.contains(infoDiv)) {
+            fileList.appendChild(infoDiv)
+        }
+
         for (let i = 0; i < files.length; i++) {
             const idx = i + secs // Generate unique id
             uploadFile(files[i], idx);
