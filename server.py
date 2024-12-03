@@ -13,10 +13,6 @@ from sqlmodel import Session
 from typing import Annotated
 from middleware import RateLimiter
 
-load_dotenv()
-
-HOST = os.getenv("HOST")
-PORT = int(os.getenv("PORT"))
 
 database = Annotated[Session, Depends(get_session)]
 
@@ -53,12 +49,3 @@ async def index(request: Request):
             name="login.html",
             context={}
         )
-
-if __name__ == "__main__":
-    uvicorn.run(
-        "server:app",
-        host=HOST,
-        port=PORT,
-        reload=True,
-        log_level="info"
-    )

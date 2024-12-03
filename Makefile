@@ -1,8 +1,8 @@
 css:
 	npx tailwindcss -i ./static/input.css -o ./static/style.css --watch
 
-run:
-	python server.py
+dev:
+	uvicorn server:app --reload --host 127.0.0.1 --port 8010
 
 setup:
 # Installs pngquant for png image compression (UNIX system)
